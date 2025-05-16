@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-if (($(tmux display-message -p -t "$TMUX_PANE" '#{pane_at_bottom}'))); then
+if (($(tmux display-message -p '#{pane_at_bottom}'))); then
   tmux switch-client -n\; \
     select-pane -t "$(tmux list-panes -F '#{pane_id} #{pane_at_top}' |
       awk '/ 1$/{print $1; exit}')"
