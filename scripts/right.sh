@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
-is_right=$(tmux display-message -p -F "#{pane_at_right}")
+set -euo pipefail
 
-if [ $is_right -eq 1 ]; then
-	tmux next
-	left_pane=$(
- 		tmux list-panes -F '#{pane_id} #{pane_at_left}' | awk "/ 1$/" | head -n 1 | awk '{print $1}'
- 	)
-	tmux select-pane -t $left_pane
+if (($(tmux display-message -p '#{pane_at_right}'))); then
+  tmux next\; select-pane -t "$(tmux list-panes -F '#{pane_id} #{pane_at_left}' |
+    awk '/ 1$/{print $1; exit}')"
 else
-	tmux select-pane -R
+  tmux select-pane -R
 fi
